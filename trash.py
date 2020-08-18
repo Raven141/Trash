@@ -164,7 +164,7 @@ def portscan():
     print ("[*] IP of host: " + host + "\n")
     ports=[1,5,7,18,20,21,22,23,25,43,42,53,80,109,110,115,118,443,194,161,445,156,137,139,3306]
     variable = 0
-    for port in ports:
+    for port in (1, 65500):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         result = sock.connect_ex((host, port))
         if result == 0:
