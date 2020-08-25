@@ -48,7 +48,7 @@ def banner():
     print('   ##    ##    ##  ##     ## ##    ## ##     ##') 
     print('   ##    ##     ## ##     ##  ######  ##     ##\n')
     print(Fore.WHITE + "[*] Coded by: Raven")
-    print("[*] Version: 1.0\n" + Fore.LIGHTWHITE_EX + "")
+    print("[*] Version: 1.1\n" + Fore.LIGHTWHITE_EX + "")
 
 def main():
     banner()
