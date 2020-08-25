@@ -120,8 +120,8 @@ def ddos():
                 th1.start()
             except:
                 print(Fore.LIGHTRED_EX + f"[-] Error while sending a packet! {ip} might be down!")
-                    time.sleep(1)
-                    pass
+                time.sleep(1)
+                pass
 
     if (method == 'udp'.lower()):
         banner()
@@ -137,7 +137,7 @@ def ddos():
                 if port == 65534:
                     port = 1
                 print (Fore.LIGHTGREEN_EX + f"[+] Flooding {ip} @ {port}")
-        except socket.error:
+        except:
             print(Fore.LIGHTRED_EX + f"[-] Error while sending a packet! {ip} might be down!")
             time.sleep(0.5)
             pass
